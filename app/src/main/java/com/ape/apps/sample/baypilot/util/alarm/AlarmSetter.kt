@@ -102,7 +102,12 @@ class AlarmSetter(private val context: Context) {
       action = alarmAction
     }.putExtra(AlarmReceiver.EXTRA_REQUEST_CODE, alarmRequestCode)
       .putExtra(AlarmReceiver.EXTRA_DUE_DATE, dueDateString)
-    return PendingIntent.getBroadcast(context, alarmRequestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+    return PendingIntent.getBroadcast(
+      context,
+      alarmRequestCode,
+      intent,
+      PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
   }
 
 }

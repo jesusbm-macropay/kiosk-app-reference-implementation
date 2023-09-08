@@ -20,6 +20,7 @@ import android.content.Context
 import android.util.Log
 import com.ape.apps.sample.baypilot.data.FieldNames
 import com.ape.apps.sample.baypilot.data.creditplan.CreditPlanInfo
+import com.ape.apps.sample.baypilot.data.creditplan.CreditPlanType
 import com.ape.apps.sample.baypilot.data.sharedprefs.SharedPreferencesManager
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
@@ -49,7 +50,14 @@ class FirebaseDatabaseManager {
       )
 
       SharedPreferencesManager(context).setCreditPlanInvalid()
-      null
+      //null
+      CreditPlanInfo(
+        1000,
+        900,
+        "Sep 08 14:08:55 -0600 2023",
+        100,
+        CreditPlanType.WEEKLY
+      )
     }
   }
 

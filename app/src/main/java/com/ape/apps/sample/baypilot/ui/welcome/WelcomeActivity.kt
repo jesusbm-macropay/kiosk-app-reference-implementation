@@ -30,6 +30,9 @@ import com.ape.apps.sample.baypilot.util.network.InternetConnectivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -60,6 +63,9 @@ class WelcomeActivity : AppCompatActivity() {
 
   override fun onStart() {
     super.onStart()
+
+    val s = SimpleDateFormat("MMM dd HH:mm:ss ZZ yyyy", Locale.ENGLISH).format(Calendar.getInstance().time)
+    Log.d("FECHA", s)
 
     val currentUser = auth.currentUser
     if (currentUser == null) {
