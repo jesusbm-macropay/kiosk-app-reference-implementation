@@ -24,6 +24,10 @@ import com.ape.apps.sample.baypilot.data.creditplan.CreditPlanType
 import com.ape.apps.sample.baypilot.data.sharedprefs.SharedPreferencesManager
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import kotlin.random.Random
 
 // Class to connect app to Realtime Database.
 // Used to fetch credit plan details for device IMEI and store FCM token device in database.
@@ -50,12 +54,17 @@ class FirebaseDatabaseManager {
       )
 
       SharedPreferencesManager(context).setCreditPlanInvalid()
+      val pesos = 100 + (Random.Default.nextDouble() * 50).toInt()
+      val daysRandom = 0 + (Random.Default.nextDouble() * 5).toInt()
+      val calendar = Calendar.getInstance()
+      calendar.add(daysRandom, Calendar.DAY_OF_YEAR)
+      val fecha = SimpleDateFormat("MMM dd HH:mm:ss ZZ yyyy", Locale.ENGLISH).format(calendar.time)
       //null
       CreditPlanInfo(
         1000,
         900,
-        "Sep 08 14:08:55 -0600 2023",
-        100,
+        fecha,
+        pesos,
         CreditPlanType.WEEKLY
       )
     }

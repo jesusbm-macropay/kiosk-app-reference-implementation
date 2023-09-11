@@ -20,7 +20,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.*
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import android.os.Message
+import android.os.Messenger
+import android.os.RemoteException
 import android.util.Log
 import android.widget.Toast
 import com.ape.apps.sample.baypilot.R
@@ -73,6 +78,15 @@ class DeviceLockMessenger {
         messenger = null
         bound = false
       }
+
+      override fun onBindingDied(name: ComponentName?) {
+        Toast.makeText(context.applicationContext, "onBindingDied", Toast.LENGTH_LONG).show()
+      }
+
+      override fun onNullBinding(name: ComponentName?) {
+        Toast.makeText(context.applicationContext, "onNullBinding: $name", Toast.LENGTH_LONG).show()
+        Log.d("NULL", "onNullBinding: $name")
+      }
     }
 
     val serviceIntent = Intent(DeviceLockServiceProtocol.SERVICE_ACTION)
@@ -82,7 +96,8 @@ class DeviceLockMessenger {
     )
 
     // Bind to DLC and get ServiceConnection in connection object.
-    context.bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+    val resultadoConexion = context.bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+    Log.d(TAG, "resultadoConexion: $resultadoConexion")
   }
 
   fun sendMessage(msgId: Int, replyMessenger: Messenger? = incomingMessenger) {
