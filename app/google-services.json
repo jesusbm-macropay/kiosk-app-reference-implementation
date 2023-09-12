@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "499826943464",
+    "project_id": "macrolock-zerotouch",
+    "storage_bucket": "macrolock-zerotouch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499826943464:android:a51086d87b751c7030f05d",
+        "android_client_info": {
+          "package_name": "com.ape.apps.sample.baypilot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499826943464-kfbvjp96j9n2u8crg18hvt7cujfjuck1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBb8J_cisri3paFZYik-_47D2uxcg7XXuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499826943464-kfbvjp96j9n2u8crg18hvt7cujfjuck1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
