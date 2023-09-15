@@ -16,6 +16,9 @@
 
 package com.ape.apps.sample.baypilot.ui.home
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -31,11 +34,20 @@ import com.ape.apps.sample.baypilot.data.sharedprefs.SharedPreferencesManager
 import com.ape.apps.sample.baypilot.databinding.ActivityHomeBinding
 import com.ape.apps.sample.baypilot.util.date.DateTimeHelper
 import com.ape.apps.sample.baypilot.util.extension.setTint
+import com.ape.apps.sample.baypilot.util.firebase.BayPilotFirebaseMessagingService
 import com.ape.apps.sample.baypilot.util.network.InternetConnectivity
 import com.ape.apps.sample.baypilot.util.network.InternetStatus
 import com.ape.apps.sample.baypilot.util.worker.DatabaseSyncWorker
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class HomeActivity : AppCompatActivity() {
+
+  lateinit var token:String
 
   companion object {
     private const val TAG = "BayPilotHomeActivity"
@@ -45,9 +57,15 @@ class HomeActivity : AppCompatActivity() {
 
   private val viewModel: HomeViewModel by viewModels()
 
+  private lateinit var fr: FirebaseFirestore
+  private lateinit var frAuth: FirebaseAuth
+
   override fun onCreate(savedInstanceState: Bundle?) {
     Log.d(TAG, "onCreate() called with: savedInstanceState")
     super.onCreate(savedInstanceState)
+
+    fr = Firebase.firestore
+    frAuth = Firebase.auth
 
     binding = ActivityHomeBinding.inflate(layoutInflater)
 
@@ -91,6 +109,32 @@ class HomeActivity : AppCompatActivity() {
       binding.buttonInternetSetting.isVisible = it == InternetStatus.OFFLINE
       binding.textViewInternetStatus.isVisible = it == InternetStatus.OFFLINE
     }
+
+    token = this.getSharedPreferences("TOKEN_FIREBASE",Context.MODE_PRIVATE).getString("TOKEN","VACIO") ?: "Vacío"
+    binding.tvToken.text = "TOKEN: $token"
+    sendInfromation(token)
+
+  }
+
+  private fun sendInfromation (token:String){
+    val user = frAuth.currentUser
+    val uid = user?.uid
+    val timestamp: Timestamp = Timestamp.now()
+
+    val device = hashMapOf(
+      "token" to token,
+      "uid" to uid,
+      "fecha" to timestamp
+    )
+
+    fr.collection("TOKEN").add(device)
+      .addOnSuccessListener { documentReference ->
+        Log.d(HomeActivity.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+        Toast.makeText(this,"DocumentSnapshot added with ID: ${documentReference.id}",Toast.LENGTH_SHORT).show()
+      }.addOnFailureListener{ ex ->
+        Toast.makeText(this,"Error adding document ${ex.message}",Toast.LENGTH_SHORT).show()
+        Log.d(HomeActivity.TAG, "Error adding document")
+      }
   }
 
   // Update UI accordingly to LOCK status of device.

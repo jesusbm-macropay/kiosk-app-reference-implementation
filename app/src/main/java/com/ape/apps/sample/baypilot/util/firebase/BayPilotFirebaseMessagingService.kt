@@ -16,6 +16,7 @@
 
 package com.ape.apps.sample.baypilot.util.firebase
 
+import android.content.Context
 import android.util.Log
 import com.ape.apps.sample.baypilot.data.sharedprefs.SharedPreferencesManager
 import com.ape.apps.sample.baypilot.util.dlc.DeviceLockMessenger
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 class BayPilotFirebaseMessagingService : FirebaseMessagingService() {
 
   companion object {
-    private const val TAG = "BayPilotFirebaseMsgService"
+    const val TAG = "BayPilotFirebaseMsgService"
 
     // Key used by FCM to send SYNC command to app to fetch latest credit plan details from database.
     // This is send whenver there has been an update in database corresponding to device's IMEI entry.
@@ -45,13 +46,12 @@ class BayPilotFirebaseMessagingService : FirebaseMessagingService() {
 
   override fun onCreate() {
     super.onCreate()
-
     messenger = DeviceLockMessenger()
   }
 
   override fun onNewToken(token: String) {
     Log.d(TAG, "onNewToken() called with: token = $token")
-
+    this.getSharedPreferences("TOKEN_FIREBASE",Context.MODE_PRIVATE).edit().putString("TOKEN",token).apply()
     // Register this token in Database.
     sendRegistrationToServer(token)
   }
@@ -105,10 +105,9 @@ class BayPilotFirebaseMessagingService : FirebaseMessagingService() {
     // Retrieve IMEI from sharedPreferences.
     val imei = sharedPreferencesManager.readIMEI()
     Log.d(TAG, "Setting Token for imei: $imei to $token")
-
     // Store the token in database under device IMEI.
     val databaseManager = FirebaseDatabaseManager()
     databaseManager.storeFcmToken(token, imei)
-  }
+   }
 
 }
